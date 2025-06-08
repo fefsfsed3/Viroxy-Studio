@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viroxy Studio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #000000;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .silk-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.7;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 180px 0 120px;
+        }
+        
+        .title {
+            font-size: 7rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            color: #ffffff;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(45deg, #ffffff, #cccccc, #ffffff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+        
+        .content-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 120px 0;
+            min-height: 60vh;
+        }
+        
+        .about-section {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1s ease forwards;
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 40px;
+            color: #ffffff;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #ffffff;
+        }
+        
+        .section-text {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.8;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .faq-section {
+            padding: 120px 0;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.3s;
+        }
+        
+        .faq-container {
+            max-width: 900px;
+            margin: 60px auto 0;
+        }
+        
+        .faq-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 60px;
+            color: #ffffff;
+            text-align: center;
+            position: relative;
+            display: inline-block;
+        }
+        
+        .faq-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: #ffffff;
+        }
+        
+        .faq-item {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .faq-item:hover {
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .faq-question {
+            padding: 28px 32px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 1.3rem;
+            color: #ffffff;
+            user-select: none;
+        }
+        
+        .faq-question::after {
+            content: '+';
+            font-size: 2rem;
+            transition: transform 0.3s ease;
+            color: #ffffff;
+        }
+        
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+        
+        .faq-answer {
+            height: 0;
+            overflow: hidden;
+            transition: height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            padding: 0 32px;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+        }
+        
+        .answer-content {
+            padding-bottom: 28px;
+        }
+        
+        .discord-section {
+            text-align: center;
+            padding: 100px 0 180px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 1s ease forwards;
+            animation-delay: 0.6s;
+        }
+        
+        .discord-button {
+            display: inline-block;
+            background: #ffffff;
+            color: #000000;
+            padding: 20px 48px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.3rem;
+            text-decoration: none;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2);
+        }
+        
+        .discord-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 15px 40px rgba(255, 255, 255, 0.3);
+        }
+        
+        .discord-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: all 0.6s ease;
+        }
+        
+        .discord-button:hover::before {
+            left: 100%;
+        }
+        
+        .discord-icon {
+            display: inline-block;
+            margin-right: 12px;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 768px) {
+            .title {
+                font-size: 4rem;
+            }
+            
+            .section-title, .faq-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-text {
+                font-size: 1.2rem;
+            }
+            
+            .faq-question {
+                font-size: 1.1rem;
+                padding: 20px 24px;
+            }
+            
+            .content-section, .faq-section {
+                padding: 80px 0;
+            }
+            
+            .header {
+                padding: 120px 0 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <canvas class="silk-canvas" id="silkCanvas"></canvas>
+    
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Viroxy Studio</h1>
+            <p class="subtitle">Development group for roblox</p>
+        </header>
+        
+        <section class="content-section">
+            <div class="about-section">
+                <h2 class="section-title">About us</h2>
+                <p class="section-text">We are a roblox dev team creating high quality games on roblox. With our talented developers we are creating high quality games on roblox.</p>
+            </div>
+        </section>
+        
+        <section class="faq-section">
+            <div class="faq-container">
+                <h2 class="faq-title">Frequently asked questions</h2>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How many developers do you have?</div>
+                    <div class="faq-answer">
+                        <div class="answer-content">We currently have 6 developers.</div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">What games are y'all creating?</div>
+                    <div class="faq-answer">
+                        <div class="answer-content">We are creating Horror, Fun, Shooter games.</div>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">How do I report bugs on your game?</div>
+                    <div class="faq-answer">
+                        <div class="answer-content">Go to our discord server to report bugs.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="discord-section">
+            <a href="https://discord.gg/8EfYwvZ27k" class="discord-button" target="_blank">
+                <svg class="discord-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3847-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"></path>
+                </svg>
+                Official Discord
+            </a>
+        </section>
+    </div>
+
+    <script>
+        // Silk shader effect implementation
+        class SilkEffect {
+            constructor(canvas) {
+                this.canvas = canvas;
+                this.gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+                this.time = 0;
+                this.speed = 5;
+                this.scale = 1;
+                this.noiseIntensity = 1.5;
+                this.rotation = 0;
+                
+                this.init();
+                this.animate();
+            }
+            
+            init() {
+                if (!this.gl) {
+                    console.error('WebGL not supported');
+                    return;
+                }
+                
+                this.resize();
+                window.addEventListener('resize', () => this.resize());
+                
+                const vertexShader = this.createShader(this.gl.VERTEX_SHADER, `
+                    attribute vec2 position;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    
+                    void main() {
+                        vPosition = vec3(position, 0.0);
+                        vUv = position * 0.5 + 0.5;
+                        gl_Position = vec4(position, 0.0, 1.0);
+                    }
+                `);
+                
+                const fragmentShader = this.createShader(this.gl.FRAGMENT_SHADER, `
+                    precision mediump float;
+                    varying vec2 vUv;
+                    varying vec3 vPosition;
+                    
+                    uniform float uTime;
+                    uniform float uSpeed;
+                    uniform float uScale;
+                    uniform float uRotation;
+                    uniform float uNoiseIntensity;
+                    
+                    const float e = 2.71828182845904523536;
+                    
+                    float noise(vec2 texCoord) {
+                        float G = e;
+                        vec2 r = (G * sin(G * texCoord));
+                        return fract(r.x * r.y * (1.0 + texCoord.x));
+                    }
+                    
+                    vec2 rotateUvs(vec2 uv, float angle) {
+                        float c = cos(angle);
+                        float s = sin(angle);
+                        mat2 rot = mat2(c, -s, s, c);
+                        return rot * uv;
+                    }
+                    
+                    void main() {
+                        float rnd = noise(gl_FragCoord.xy);
+                        vec2 uv = rotateUvs(vUv * uScale, uRotation);
+                        vec2 tex = uv * uScale;
+                        float tOffset = uSpeed * uTime;
+                        
+                        tex.y += 0.03 * sin(8.0 * tex.x - tOffset);
+                        
+                        float pattern = 0.6 + 0.4 * sin(5.0 * (tex.x + tex.y + cos(3.0 * tex.x + 5.0 * tex.y) + 0.02 * tOffset) + sin(20.0 * (tex.x + tex.y - 0.1 * tOffset)));
+                        
+                        vec3 color = vec3(0.48, 0.45, 0.50) * pattern - rnd / 15.0 * uNoiseIntensity;
+                        gl_FragColor = vec4(color, 1.0);
+                    }
+                `);
+                
+                this.program = this.createProgram(vertexShader, fragmentShader);
+                
+                const vertices = new Float32Array([
+                    -1, -1,
+                     1, -1,
+                    -1,  1,
+                     1,  1
+                ]);
+                
+                this.buffer = this.gl.createBuffer();
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+                this.gl.bufferData(this.gl.ARRAY_BUFFER, vertices, this.gl.STATIC_DRAW);
+                
+                this.positionLocation = this.gl.getAttribLocation(this.program, 'position');
+                this.timeLocation = this.gl.getUniformLocation(this.program, 'uTime');
+                this.speedLocation = this.gl.getUniformLocation(this.program, 'uSpeed');
+                this.scaleLocation = this.gl.getUniformLocation(this.program, 'uScale');
+                this.rotationLocation = this.gl.getUniformLocation(this.program, 'uRotation');
+                this.noiseLocation = this.gl.getUniformLocation(this.program, 'uNoiseIntensity');
+            }
+            
+            createShader(type, source) {
+                const shader = this.gl.createShader(type);
+                this.gl.shaderSource(shader, source);
+                this.gl.compileShader(shader);
+                
+                if (!this.gl.getShaderParameter(shader, this.gl.COMPILE_STATUS)) {
+                    console.error('Shader compilation error:', this.gl.getShaderInfoLog(shader));
+                    this.gl.deleteShader(shader);
+                    return null;
+                }
+                
+                return shader;
+            }
+            
+            createProgram(vertexShader, fragmentShader) {
+                const program = this.gl.createProgram();
+                this.gl.attachShader(program, vertexShader);
+                this.gl.attachShader(program, fragmentShader);
+                this.gl.linkProgram(program);
+                
+                if (!this.gl.getProgramParameter(program, this.gl.LINK_STATUS)) {
+                    console.error('Program linking error:', this.gl.getProgramInfoLog(program));
+                    this.gl.deleteProgram(program);
+                    return null;
+                }
+                
+                return program;
+            }
+            
+            resize() {
+                this.canvas.width = window.innerWidth;
+                this.canvas.height = window.innerHeight;
+                this.gl.viewport(0, 0, this.canvas.width, this.canvas.height);
+            }
+            
+            render() {
+                this.gl.clear(this.gl.COLOR_BUFFER_BIT);
+                this.gl.useProgram(this.program);
+                
+                this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.buffer);
+                this.gl.enableVertexAttribArray(this.positionLocation);
+                this.gl.vertexAttribPointer(this.positionLocation, 2, this.gl.FLOAT, false, 0, 0);
+                
+                this.gl.uniform1f(this.timeLocation, this.time);
+                this.gl.uniform1f(this.speedLocation, this.speed);
+                this.gl.uniform1f(this.scaleLocation, this.scale);
+                this.gl.uniform1f(this.rotationLocation, this.rotation);
+                this.gl.uniform1f(this.noiseLocation, this.noiseIntensity);
+                
+                this.gl.drawArrays(this.gl.TRIANGLE_STRIP, 0, 4);
+            }
+            
+            animate() {
+                this.time += 0.01;
+                this.render();
+                requestAnimationFrame(() => this.animate());
+            }
+        }
+        
+        // Initialize silk effect
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('silkCanvas');
+            new SilkEffect(canvas);
+            
+            // FAQ functionality
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                const content = answer.querySelector('.answer-content');
+                
+                question.addEventListener('click', () => {
+                    const isActive = item.classList.contains('active');
+                    
+                    faqItems.forEach(faq => {
+                        faq.classList.remove('active');
+                        const faqAnswer = faq.querySelector('.faq-answer');
+                        faqAnswer.style.height = '0px';
+                    });
+                    
+                    if (!isActive) {
+                        item.classList.add('active');
+                        answer.style.height = content.scrollHeight + 'px';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
